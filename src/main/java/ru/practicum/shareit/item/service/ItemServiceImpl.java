@@ -19,15 +19,16 @@ import java.util.stream.Collectors;
 public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
+    private final ItemMapper itemMapper;
 
     @Override
     public ItemDto create(Long userId, ItemDto itemDto) {
         User owner = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
 
-        Item item = ItemMapper.toItem(itemDto);
+        Item item = itemMapper.toItem(itemDto);
         item.setOwner(owner);
-        return ItemMapper.toItemDto(itemRepository.save(item));
+        return itemMapper.toItemDto(itemRepository.save(item));
     }
 
     @Override
@@ -36,33 +37,26 @@ public class ItemServiceImpl implements ItemService {
                 .orElseThrow(() -> new NotFoundException("Вещь не найдена"));
 
         if (!existingItem.getOwner().getId().equals(userId)) {
-            throw new NotFoundException("Пользователь не является владельцем этой вещи");
+            throw new NotFoundException("Изменять вещь может только владелец");
         }
 
-        if (itemDto.getName() != null && !itemDto.getName().isBlank()) {
-            existingItem.setName(itemDto.getName());
-        }
-        if (itemDto.getDescription() != null && !itemDto.getDescription().isBlank()) {
-            existingItem.setDescription(itemDto.getDescription());
-        }
-        if (itemDto.getAvailable() != null) {
-            existingItem.setAvailable(itemDto.getAvailable());
-        }
+        if (itemDto.getName() != null) existingItem.setName(itemDto.getName());
+        if (itemDto.getDescription() != null) existingItem.setDescription(itemDto.getDescription());
+        if (itemDto.getAvailable() != null) existingItem.setAvailable(itemDto.getAvailable());
 
-        return ItemMapper.toItemDto(itemRepository.update(existingItem));
+        return itemMapper.toItemDto(itemRepository.update(existingItem));
     }
 
     @Override
     public ItemDto getById(Long itemId) {
-        Item item = itemRepository.findById(itemId)
-                .orElseThrow(() -> new NotFoundException("Вещь не найдена"));
-        return ItemMapper.toItemDto(item);
+        return itemMapper.toItemDto(itemRepository.findById(itemId)
+                .orElseThrow(() -> new NotFoundException("Вещь не найдена")));
     }
 
     @Override
     public List<ItemDto> getByUserId(Long userId) {
         return itemRepository.findAllByOwnerId(userId).stream()
-                .map(ItemMapper::toItemDto)
+                .map(itemMapper::toItemDto)
                 .collect(Collectors.toList());
     }
 
@@ -72,7 +66,7 @@ public class ItemServiceImpl implements ItemService {
             return Collections.emptyList();
         }
         return itemRepository.search(text).stream()
-                .map(ItemMapper::toItemDto)
+                .map(itemMapper::toItemDto)
                 .collect(Collectors.toList());
     }
 }
