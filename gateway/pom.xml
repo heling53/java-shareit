@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>shareit-gateway</artifactId>
+    <artifactId>gateway</artifactId>
 
     <dependencies>
         <dependency>
