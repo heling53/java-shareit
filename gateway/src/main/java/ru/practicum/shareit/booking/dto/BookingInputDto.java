@@ -5,11 +5,12 @@ import java.time.LocalDateTime;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+@Data
+@Setter
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookingInputDto {
