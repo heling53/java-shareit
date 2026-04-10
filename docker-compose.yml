@@ -1,0 +1,50 @@
+services:
+  gateway:
+    build: gateway
+    image: shareit-gateway
+    container_name: shareit-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      server:
+        condition: service_healthy
+    environment:
+      - SHAREIT_SERVER_URL=http://server:9090
+      - JAVA_OPTS=-XX:+TieredCompilation -XX:TieredStopAtLevel=1 -Djava.security.egd=file:/dev/./urandom
+
+  server:
+    build: server
+    image: shareit-server
+    container_name: shareit-server
+    ports:
+      - "9090:9090"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/shareit
+      - SPRING_DATASOURCE_USERNAME=shareit
+      - SPRING_DATASOURCE_PASSWORD=shareit
+      - JAVA_OPTS=-XX:+TieredCompilation -XX:TieredStopAtLevel=1 -Djava.security.egd=file:/dev/./urandom
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9090/actuator/health" ]
+      interval: 5s
+      timeout: 3s
+      retries: 15
+      start_period: 25s
+
+  db:
+    image: postgres:16.1
+    container_name: postgres
+    command: [ "postgres", "-c", "fsync=off", "-c", "full_page_writes=off" ]
+    ports:
+      - "6541:5432"
+    environment:
+      - POSTGRES_PASSWORD=shareit
+      - POSTGRES_USER=shareit
+      - POSTGRES_DB=shareit
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U shareit -d shareit" ]
+      interval: 2s
+      timeout: 1s
+      retries: 30
