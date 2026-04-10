@@ -25,6 +25,7 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/shareit
       - SPRING_DATASOURCE_USERNAME=shareit
       - SPRING_DATASOURCE_PASSWORD=shareit
+      - JAVA_OPTS=-XX:+TieredCompilation -XX:TieredStopAtLevel=1 -Djava.security.egd=file:/dev/./urandom
 
   db:
     image: postgres:16.1
@@ -36,7 +37,8 @@ services:
       - POSTGRES_USER=shareit
       - POSTGRES_DB=shareit
     healthcheck:
+      # Проверка готовности именно под твоего пользователя и базу
       test: ["CMD-SHELL", "pg_isready -U shareit -d shareit"]
       interval: 5s
       timeout: 5s
-      retries: 10
+      retries: 15
