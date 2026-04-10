@@ -27,7 +27,7 @@ class BookingControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private ru.practicum.shareit.booking.BookingClient bookingClient;
+    private ru.practicum.shareit.client.BookingClient bookingClient;
 
     @Test
     void shouldReturnBadRequestWhenBookingDateIsInvalid() throws Exception {

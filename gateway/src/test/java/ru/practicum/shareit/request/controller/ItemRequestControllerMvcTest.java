@@ -31,7 +31,7 @@ class ItemRequestControllerMvcTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private ru.practicum.shareit.request.ItemRequestClient itemRequestClient;
+    private ru.practicum.shareit.client.ItemRequestClient itemRequestClient;
 
     private static final String HEADER_USER_ID = "X-Sharer-User-Id";
 

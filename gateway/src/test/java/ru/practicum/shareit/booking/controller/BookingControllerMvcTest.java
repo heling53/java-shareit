@@ -33,7 +33,7 @@ class BookingControllerMvcTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private ru.practicum.shareit.booking.BookingClient bookingClient;
+    private ru.practicum.shareit.client.BookingClient bookingClient;
 
     private static final String HEADER_USER_ID = "X-Sharer-User-Id";
 

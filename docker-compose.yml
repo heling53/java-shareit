@@ -7,7 +7,7 @@ services:
       - "8080:8080"
     depends_on:
       server:
-        condition: service_healthy   # ← изменили с service_started
+        condition: service_healthy
     environment:
       - SHAREIT_SERVER_URL=http://server:9090
       - JAVA_OPTS=-XX:+TieredCompilation -XX:TieredStopAtLevel=1 -Djava.security.egd=file:/dev/./urandom
@@ -26,8 +26,8 @@ services:
       - SPRING_DATASOURCE_USERNAME=shareit
       - SPRING_DATASOURCE_PASSWORD=shareit
       - JAVA_OPTS=-XX:+TieredCompilation -XX:TieredStopAtLevel=1 -Djava.security.egd=file:/dev/./urandom
-    healthcheck:                     # ← Добавили healthcheck
-      test: ["CMD", "curl", "-f", "http://localhost:9090/actuator/health"]
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9090/actuator/health" ]
       interval: 5s
       timeout: 3s
       retries: 15
@@ -36,7 +36,7 @@ services:
   db:
     image: postgres:16.1
     container_name: postgres
-    command: ["postgres", "-c", "fsync=off", "-c", "full_page_writes=off"]
+    command: [ "postgres", "-c", "fsync=off", "-c", "full_page_writes=off" ]
     ports:
       - "6541:5432"
     environment:
@@ -44,7 +44,7 @@ services:
       - POSTGRES_USER=shareit
       - POSTGRES_DB=shareit
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U shareit -d shareit"]
+      test: [ "CMD-SHELL", "pg_isready -U shareit -d shareit" ]
       interval: 2s
       timeout: 1s
       retries: 30

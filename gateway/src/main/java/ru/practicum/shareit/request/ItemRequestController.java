@@ -18,7 +18,7 @@ import ru.practicum.shareit.request.dto.ItemRequestDto;
 @Validated
 public class ItemRequestController {
 
-    private final ru.practicum.shareit.request.ItemRequestClient itemRequestClient;
+    private final ru.practicum.shareit.client.ItemRequestClient itemRequestClient;
     private static final String USER_ID_HEADER = "X-Sharer-User-Id";
 
     @PostMapping
