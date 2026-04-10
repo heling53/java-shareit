@@ -6,7 +6,8 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - server
+      server:
+        condition: service_started
     environment:
       - SHAREIT_SERVER_URL=http://server:9090
 
@@ -17,7 +18,8 @@ services:
     ports:
       - "9090:9090"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/shareit
       - SPRING_DATASOURCE_USERNAME=shareit
@@ -33,7 +35,7 @@ services:
       - POSTGRES_USER=shareit
       - POSTGRES_DB=shareit
     healthcheck:
-      test: pg_isready -q -d $$POSTGRES_DB -U $$POSTGRES_USER
-      timeout: 5s
+      test: ["CMD-SHELL", "pg_isready -U shareit -d shareit"]
       interval: 5s
+      timeout: 5s
       retries: 10
