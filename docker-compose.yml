@@ -10,6 +10,7 @@ services:
         condition: service_started
     environment:
       - SHAREIT_SERVER_URL=http://server:9090
+      - JAVA_OPTS=-XX:+TieredCompilation -XX:TieredStopAtLevel=1 -Djava.security.egd=file:/dev/./urandom
 
   server:
     build: server
