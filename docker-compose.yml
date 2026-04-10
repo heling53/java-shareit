@@ -30,6 +30,7 @@ services:
   db:
     image: postgres:16.1
     container_name: postgres
+    command: [ "postgres", "-c", "fsync=off", "-c", "full_page_writes=off" ]
     ports:
       - "6541:5432"
     environment:
@@ -37,8 +38,7 @@ services:
       - POSTGRES_USER=shareit
       - POSTGRES_DB=shareit
     healthcheck:
-      # Проверка готовности именно под твоего пользователя и базу
-      test: ["CMD-SHELL", "pg_isready -U shareit -d shareit"]
-      interval: 5s
-      timeout: 5s
-      retries: 15
+      test: [ "CMD-SHELL", "pg_isready -U shareit -d shareit" ]
+      interval: 1s
+      timeout: 1s
+      retries: 40
